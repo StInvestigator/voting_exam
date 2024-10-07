@@ -117,6 +117,30 @@
                         }
                     })
                 })
+                $('button.candidate-remove').on('click', e => {
+                    const target = $(e.target)
+                    let id = target.data('id')
+                    let success = target.data("success-message")
+                    let error = target.data("error-message")
+
+                    $.ajax({
+                        type: "POST",
+                        url: `/api/v1/candidate/remove/${id}`,
+                        contentType: 'application/json',
+                        success: function (response) {
+                            console.log(response)
+                            myModal.hide()
+
+                            Swal.fire(success, "", "success").then(() => {
+                                window.location.reload()
+                            });
+                        },
+                        error: function (response) {
+                            console.log(response)
+                            Swal.fire(respo, "", "error")
+                        }
+                    })
+                })
             })
         })
 </script>

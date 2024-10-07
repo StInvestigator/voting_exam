@@ -19,7 +19,7 @@ class roleChecker
     {
         if(!empty(Auth::check()) && Auth::user()->role=="User"){
             
-            return $next($request);
+            return $next($request); // IF USED add another redirect for User
         }
         return $next($request);
     }

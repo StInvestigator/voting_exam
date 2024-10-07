@@ -10,10 +10,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 class UploadFileService{
-    public function setImage(UploadedFile $uploadedFile, Model $model, $disk){
+    public function setImage(UploadedFile $uploadedFile, Model $model, string $disk){
         $filename = Str::random(20) . '.' . $uploadedFile->getClientOriginalExtension();
         $fullFile = $filename[0] . DIRECTORY_SEPARATOR . $filename[1] . DIRECTORY_SEPARATOR . $filename;
-        Storage::disk("candidates")->putFileAs('', $uploadedFile, $fullFile);
+        Storage::disk($disk)->putFileAs('', $uploadedFile, $fullFile);
         $image = new Image([
             'original_filename' => $uploadedFile->getClientOriginalName(),
             'disk' => $disk,
