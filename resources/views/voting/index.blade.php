@@ -101,7 +101,7 @@
 
                     $.ajax({
                         type: "POST",
-                        url: `/api/v1/vote/${voting_id}/${candidate_id}/{{Auth::id()}}`,
+                        url: `/api/v1/vote/${candidate_id}`,
                         contentType: 'application/json',
                         success: function (response) {
                             console.log(response)

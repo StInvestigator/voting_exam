@@ -26,8 +26,10 @@ class CandidateController extends Controller
     }
     public function remove(Candidate $candidate): JsonResponse
     {
+        if (Auth::user()->role != 'Admin')
+            return $this->responder->error("You don`t have permission to do this!")->respond();
         try {
-            if($candidate->image){
+            if ($candidate->image) {
                 $candidate->image->delete();
             }
             $candidate->delete();

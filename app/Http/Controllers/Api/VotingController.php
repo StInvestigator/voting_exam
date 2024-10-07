@@ -24,11 +24,16 @@ class VotingController extends Controller
     {
         $this->responder = $responder;
     }
-    public function vote(int $voting_id, int $candidate_id, int $user_id): JsonResponse
+    public function vote(Candidate $candidate): JsonResponse
     {
         try {
-            $vote = new Vote(['voting_id' => $voting_id, 'user_id' => $user_id, 'candidate_id' => $candidate_id]);
-            $vote->save();
+            if (Vote::whereRaw('user_id = ? and voting_id = ?', [Auth::user()->id, $candidate->voting->id])->get()->count() == 0) {
+                $vote = new Vote(['voting_id' => $candidate->voting->id, 'user_id' => Auth::user()->id, 'candidate_id' => $candidate->id]);
+                $vote->save();
+            }
+            else{
+                return $this->responder->error("You already attended in this voting!")->respond();
+            }
         } catch (Exception $exception) {
             return $this->responder->error($exception->getMessage())->respond();
         }

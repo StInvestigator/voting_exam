@@ -12,25 +12,26 @@ Route::get('/', function () {
 
 Route::prefix("voting")->as('voting.')->middleware(['auth'])->group(function () {
 
-    Route::get('/',[ VotingController::class, 'index'])->name('index');
-    Route::get('/list',[ VotingController::class, 'list'])->name('list');
-    Route::get('/create',[ VotingController::class, 'create'])->name('create');
-    Route::post('/store',[ VotingController::class, 'store'])->name('store');
-    Route::get('/edit/{voting}',[ VotingController::class, 'edit'])->name('edit');
-    Route::post('/update/{prevVoting}',[ VotingController::class, 'update'])->name('update');
-    Route::get('/delete/{voting}',[ VotingController::class, 'delete'])->name('delete');
-    Route::get('/candidates/{voting}',[ VotingController::class, 'candidates'])->name('candidates');
-
+    Route::get('/', [VotingController::class, 'index'])->name('index');
+    Route::middleware([roleChecker::class])->group(function () {
+        Route::get('/create', [VotingController::class, 'create'])->name('create');
+        Route::post('/store', [VotingController::class, 'store'])->name('store');
+        Route::get('/edit/{voting}', [VotingController::class, 'edit'])->name('edit');
+        Route::post('/update/{prevVoting}', [VotingController::class, 'update'])->name('update');
+        Route::get('/delete/{voting}', [VotingController::class, 'delete'])->name('delete');
+        Route::get('/candidates/{voting}', [VotingController::class, 'candidates'])->name('candidates');
+    });
 });
 
 Route::prefix("candidate")->as('candidate.')->middleware(['auth'])->group(function () {
 
-    Route::get('/add/{voting}',[ CandidateController::class, 'add'])->name('add');
-    Route::post('/store/{voting}',[ CandidateController::class, 'store'])->name('store');
-    Route::get('/edit/{candidate}',[ CandidateController::class, 'edit'])->name('edit');
-    Route::post('/update/{prevCandidate}',[ CandidateController::class, 'update'])->name('update');
-    Route::get('/delete/{candidate}',[ CandidateController::class, 'delete'])->name('delete');
-
+    Route::middleware([roleChecker::class])->group(function () {
+        Route::get('/add/{voting}', [CandidateController::class, 'add'])->name('add');
+        Route::post('/store/{voting}', [CandidateController::class, 'store'])->name('store');
+        Route::get('/edit/{candidate}', [CandidateController::class, 'edit'])->name('edit');
+        Route::post('/update/{prevCandidate}', [CandidateController::class, 'update'])->name('update');
+        Route::get('/delete/{candidate}', [CandidateController::class, 'delete'])->name('delete');
+    });
 });
 
 
@@ -44,4 +45,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
